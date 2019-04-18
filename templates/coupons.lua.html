@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<title></title>
+		<link href="{* bootstrap_css *}" rel="stylesheet">
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/open-iconic/1.1.1/font/css/open-iconic-bootstrap.min.css" rel="stylesheet">
+	</head>
+	<body>
+		
+		
+		
+		<div class="container">
+			
+			<nav class="navbar navbar-expand-lg navbar-light bg-light">
+				<a class="navbar-brand" href="/">slurger</a>
+				<img class="navbar-brand" src="/static/logo.png">
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				
+				<div class="collapse navbar-collapse" id="navbarSupportedContent">
+					<ul class="navbar-nav mr-auto">
+						
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								Sort by
+							</a>
+							<div class="dropdown-menu">
+								<a class="dropdown-item" href="?sort=price_asc">Price <span class="oi oi-chevron-top" aria-hidden="true"></span></a>
+								<a class="dropdown-item" href="?sort=price_desc">Price <span class="oi oi-chevron-bottom" aria-hidden="true"></span></a>
+								<a class="dropdown-item" href="?sort=to_asc">Valid until <span class="oi oi-chevron-top" aria-hidden="true"></span></a>
+								<a class="dropdown-item" href="?sort=to_desc">Valid until <span class="oi oi-chevron-bottom" aria-hidden="true"></span></a>
+							</div>
+						</li>
+						
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								Filter
+							</a>
+							<div class="dropdown-menu">
+								<a class="dropdown-item" href="?filters=price_max,3">Price &lt; 3€</a>
+								<a class="dropdown-item" href="?filters=hide_invalid_date">Hide outdated/not yet valid</a>
+								<div class="dropdown-divider"></div>
+								
+								{% for i, category in ipairs(flags.productCategories) do %}
+								<a class="dropdown-item" href="?filters=category,{{category.id}}">{{category.title}}</a>
+								{% end %}
+							</div>
+						</li>
+						
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								Theme
+							</a>
+							<div class="dropdown-menu">
+								<a class="dropdown-item" href="?theme=cyborg">cyborg</a>
+								<a class="dropdown-item" href="?theme=flatly">flatly</a>
+								<a class="dropdown-item" href="?theme=darkly">darkly</a>
+								<a class="dropdown-item" href="?theme=default">default</a>
+							</div>
+						</li>
+						
+						<li class="nav-item">
+							<a class="nav-link" href="/static/about.html">About</a>
+						</li>
+						
+					</ul>
+					<form class="form-inline my-2 my-lg-0" method="GET">
+						<input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="search">
+						<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+					</form>
+				</div>
+			</nav>
+			
+			<br>
+			
+			<div class="row">
+				{% for coupon_i, coupon in ipairs(coupons) do %}
+				<div class="col-md-4">
+					<div class="card mb-4 shadow-sm">
+						<!--svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/></svg-->
+						<img src="{* _img(coupon, resolution) *}" width="100%">
+						<div class="card-body">
+							<h5 class="card-title">{{coupon.title}}</h5>
+							{% if coupon.description ~= NULL then %}
+							<p class="card-text">
+								{{coupon.description}}
+							</p>
+							{% end %}
+							<div class="d-flex justify-content-between align-items-center">
+								<small class="text-muted">{{coupon.price}}</small>
+								<div class="btn-group">
+									<a role="button" class="btn btn-sm btn-outline-secondary" href="/coupon/{{coupon_i}}">Details</a>
+								</div>
+								<small class="text-muted">{{coupon.plu}}</small>
+							</div>
+						</div>
+					</div>
+				</div>
+				{% end %}
+			</div>
+		
+		</div>
+		
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js"></script>
+	</body>
+</html>

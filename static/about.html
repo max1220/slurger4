@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<title></title>
+		<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet">
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/open-iconic/1.1.1/font/css/open-iconic-bootstrap.min.css" rel="stylesheet">
+	</head>
+	<body class="bg-light">
+		
+		
+		
+		<div class="container">
+			
+			<nav class="navbar navbar-expand-lg navbar-light bg-light">
+				<a class="navbar-brand" href="/">slurger</a>
+				<img class="navbar-brand" src="/static/logo.png">
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				
+				<div class="collapse navbar-collapse" id="navbarSupportedContent">
+					<ul class="navbar-nav mr-auto">
+						
+						<li class="nav-item">
+							<a class="nav-link" href="/">back</a>
+						</li>
+						
+					</ul>
+				</div>
+			</nav>
+			
+			
+			<h1>About</h1>
+			<img src="/static/logo.png" style="width: 128px; height: 128px; image-rendering: pixelated; image-rendering: -moz-crisp-edges;">
+			<p class="lead">Slurger = Super + Lua + Burger</p>
+			<p>
+				Slurger is a programm, written in Lua, that grab coupons from the Burgerking Server, and presents them on a webpage.
+			</p>
+			
+			<h2>Details</h2>
+			<p>
+				This program uses the same API to query data from the Burgerking Server as the app.
+				That is because the API endpoints were extracted from the app.
+				The main advantage is that slurger does not delete the coupons based on the set expiry date(which is inaccurate; Coupons stay valid way after).
+				Not beeing tracked by that app is just a nice bonus.
+				<br>
+				Also see this gids:
+			</p>
+			
+			<h2>Libraries used</h2>
+			<p>
+				<ul>
+					<li><a href="https://turbo.readthedocs.io/">turbo.lua</a></li>
+					<li><a href="https://www.kyne.com.au/~mark/software/lua-cjson.php">cjson</a></li>
+					<li><a href="https://github.com/bungle/lua-resty-template">lua-resty-template</a></li>
+					<li><a href="https://getbootstrap.com/">Bootstrap</a></li>
+					<li><a href="https://useiconic.com/open/">openiconic</a></li>
+				</ul>
+			</p>
+			
+			<h2>License</h2>
+			<p>slurger is released under the MIT license. See LICENSE</p>
+			
+			
+		</div>
+		
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js"></script>
+	</body>
+</html>

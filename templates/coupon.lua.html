@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<title></title>
+		<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet">
+	</head>
+	<body class="bg-light">
+		<div class="container">
+			<div class="py-5 text-center">
+				<h2>{{coupon.title}}</h2>
+				<img src="{* _img(coupon, resolution) *}">
+				{% if coupon.description ~= NULL then %}
+				<p class="lead">{{ coupon.description }}</p>
+				{% end %}
+			</div>
+			{%
+			local categories_str = {}
+			for k,v in ipairs(coupon.categories) do
+				table.insert(categories_str, tostring(category_by_id(v).title))
+			end
+			%}
+<pre><code>
+plu:        {{ coupon.plu }}
+categories: {{ table.concat(categories_str, ", ") }}
+price:      {{ coupon.price }}
+to:         {{ os.date("%c", coupon.to) }}
+from:       {{ os.date("%c", coupon.from) }}
+newTo:      {{ coupon.newTo == NULL and "" or os.date("%c", coupon.newTo == NULL) }}
+modified:   {{ os.date("%c", coupon.modified) }}
+id:         {{ coupon.id }}
+myBkOnly:   {{ coupon.myBkOnly }}
+footnote:   {{ coupon.footnote }}
+</code></pre>
+						
+		</div>
+		
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js"></script>
+	</body>
+</html>
+

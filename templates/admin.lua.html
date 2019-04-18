@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<title></title>
+		<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet">
+	</head>
+	<body class="bg-light">
+		<div class="container">
+			<div class="py-5 text-center">
+				<h2>Admin panel</h2>
+				<p class="lead">Admin panel stuff.</p>
+				<code>
+Current coupons: {{#coupons}}
+
+</code>
+			</div>
+
+			<div class="row">
+				
+				<div class="col-md-4">
+					<div class="card mb-4 shadow-sm">
+						<div class="card-body">
+							<h5 class="card-title">Update data</h5>
+							<p class="card-text">
+								Downloads required data from server.
+							</p>
+							<div class="d-flex justify-content-between align-items-center">
+								<form method="POST">
+									<input type="hidden" name="action" value="update_data">
+									<div class="btn-group">
+										<input type="submit" class="btn btn-sm btn-outline-secondary" value="run">
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="col-md-4">
+					<div class="card mb-4 shadow-sm">
+						<div class="card-body">
+							<h5 class="card-title">Read data</h5>
+							<p class="card-text">
+								Load data from JSONs.
+							</p>
+							<div class="d-flex justify-content-between align-items-center">
+								<form method="POST">
+									<input type="hidden" name="action" value="read_data">
+									<div class="btn-group">
+										<input type="submit" class="btn btn-sm btn-outline-secondary" value="run">
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+			
+		</div>
+		
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js"></script>
+	</body>
+</html>
