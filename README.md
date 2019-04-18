@@ -33,6 +33,16 @@ Now you should be able to start the server via the start.sh script.
 
 
 
+Todo
+-----
+
+ * make page that looks like app
+ * generate EAN13/QR-codes
+ * use HTML5 web storage for offline support
+ * better search, filters, sort
+
+
+
 Libraries used
 ---------------
 
