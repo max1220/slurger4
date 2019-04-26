@@ -1,0 +1,11 @@
+img/*
+contents.json
+coupons.json
+flags.json
+meta.json
+prestitials.json
+products.json
+promos.json
+stores.json
+template.lua
+tiles.json
