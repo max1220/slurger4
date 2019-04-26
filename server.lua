@@ -68,6 +68,7 @@ local function merge_new_coupons(other_coupons)
 	for i, coupon in ipairs(other_coupons) do
 		if not coupon_ids[coupon.id] then
 			turbo.log.success("Adding missing coupon: " .. coupon.id)
+			coupon._slurger_time = os.time()
 			table.insert(coupons, coupon)
 		end
 	end
@@ -253,19 +254,19 @@ function coupons_handler:get()
 	local theme = self:get_argument("theme", "")
 	local search = self:get_argument("search", "")
 	
-	local bootstrap_css = "https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+	local bootstrap_css = "/static/bootstrap-4.3.1/css/bootstrap.min.css"
 	if theme == "cyborg" then
-		bootstrap_css = "https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/cyborg/bootstrap.min.css"
+		bootstrap_css = "/static/cyborg/bootstrap.min.css"
 	elseif theme == "flatly" then
-		bootstrap_css = "https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/flatly/bootstrap.min.css"
+		bootstrap_css = "/static/flatly/bootstrap.min.css"
 	elseif theme == "darkly" then
-		bootstrap_css = "https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/darkly/bootstrap.min.css"
+		bootstrap_css = "/static/darkly/bootstrap.min.css"
 	end
 	
 	
 	if search then
 		_coupons = ifilter(_coupons, function(k, coupon)
-			if coupon.title:lower():match(search) then
+			if coupon.title:lower():match(search:lower()) then
 				return true
 			elseif coupon.description ~= json.null and coupon.description:lower():match(search) then
 				return true
