@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<title></title>
+		<link href="{* bootstrap_css *}" rel="stylesheet">
+		<link href="/static/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
+	</head>
+	<body>
+		
+		
+		
+		<div class="container-fluid">
+			
+			<div class="row">
+				{% for coupon_i, coupon in ipairs(coupons) do %}
+				{% if coupon.dimension.width == 4 then %}
+				<div class="col-12 p-0 m-0">
+					<!--svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/></svg-->
+					<a href="/coupon/{{coupon_i}}">
+						<img src="{* _img(coupon, resolution_lg) *}" width="100%" class="m-0 p-0">
+					</a>
+				</div>
+				{% else %}
+				<div class="col-6 p-0 m-0">
+					<!--svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/></svg-->
+					<a href="/coupon/{{coupon_i}}">
+						<img src="{* _img(coupon, resolution) *}" width="100%" class="p-0 m-0">
+					</a>
+				</div>
+				{% end %}
+				{% end %}
+			</div>
+		
+		</div>
+		
+		<div class="fixed-bottom">
+			
+			<div class="collapse" id="navbarSearch">
+				<div class="bg-light p-1">
+					<form class="input-group my-0 mx-1" method="GET">
+						<input class="form-control " type="search" placeholder="Search" aria-label="Search" name="search">
+						<div class="input-group-append">
+							<button class="btn btn-outline-success" type="submit">Search</button>
+						</div>
+					</form>
+				</div>
+			</div>
+			
+			<div class="collapse" id="navbarFilter">
+				<div class="bg-light p-4">
+					<h5 class="h4">Filter</h5>
+					<a class="btn btn-block" href="?filters=price_max,3">Price &lt; 3€</a>
+					<a class="btn btn-block" href="?filters=hide_invalid_date">Hide outdated/not yet valid</a>
+					<hr>
+					{% for i, category in ipairs(flags.productCategories) do %}
+					<a class="btn btn-block" href="?filters=category,{{category.id}}">{{category.title}}</a>
+					{% end %}
+				</div>
+			</div>
+			
+			<div class="collapse" id="navbarSort">
+				<div class="bg-light p-4">
+					<h5 class="h4">Sort</h5>
+					<a class="btn btn-block" href="?sort=price_asc">Price <span class="oi oi-chevron-top" aria-hidden="true"></span></a>
+					<a class="btn btn-block" href="?sort=price_desc">Price <span class="oi oi-chevron-bottom" aria-hidden="true"></span></a>
+					<a class="btn btn-block" href="?sort=to_asc">Valid until <span class="oi oi-chevron-top" aria-hidden="true"></span></a>
+					<a class="btn btn-block" href="?sort=to_desc">Valid until <span class="oi oi-chevron-bottom" aria-hidden="true"></span></a>
+				</div>
+			</div>
+			
+			<div class="collapse" id="navbarMisc">
+				<div class="bg-light p-4">
+					<h5 class="h4">Theme</h5>
+					<a class="btn btn-block" href="?theme=cyborg">cyborg</a>
+					<a class="btn btn-block" href="?theme=flatly">flatly</a>
+					<a class="btn btn-block" href="?theme=darkly">darkly</a>
+					<a class="btn btn-block" href="?theme=default">default</a>
+					<h5 class="h4">Slurger4</h5>
+					<a class="btn btn-block" href="/static/about.html">About</a>
+				</div>
+			</div>
+			
+			<nav class="navbar bg-light">
+				<div>
+					<button class="nav-item btn " role="button" aria-label="Dummy button(ignore)">
+						<span class="oi oi-chevron-left"></span>
+					</button>
+				</div>
+				
+				<div>
+					<button class="nav-item btn " role="button" data-toggle="collapse" data-target="#navbarMisc" aria-expanded="false" aria-label="Toggle navigation">
+						<span class="oi oi-ellipses"></span>
+					</button>
+						
+					<button class="nav-item btn " role="button" data-toggle="collapse" data-target="#navbarSort" aria-expanded="false" aria-label="Toggle navigation">
+						<span class="oi oi-sort-descending"></span>
+					</button>
+					
+					<button class="nav-item btn " role="button" data-toggle="collapse" data-target="#navbarSearch" aria-expanded="false" aria-label="Toggle search">
+						<span class="oi oi-magnifying-glass"></span>
+					</button>
+					
+					<button class="nav-item btn" role="button" data-toggle="collapse" data-target="#navbarFilter" aria-expanded="false" aria-label="Toggle navigation">
+						<span class="oi oi-list"></span>
+					</button>
+				</div>
+			</nav>
+		</div>
+		
+		<script src="/static/jquery-3.4.0.min.js"></script>
+		<script src="/static/bootstrap-4.3.1/js/bootstrap.bundle.min.js"></script>
+	</body>
+</html>

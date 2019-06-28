@@ -20,8 +20,9 @@ return {
 	
 	-- template paths
 	templates = {
-		coupons_template = "templates/coupons.lua.html",
-		coupon_template = "templates/coupon.lua.html",
+		--coupons_template = "templates/coupons.lua.html",
+		coupons_template = "templates/coupons_app.lua.html",
+		coupon_template = "templates/coupon_app.lua.html",
 		admin_panel_template = "templates/admin.lua.html"
 	}
 }

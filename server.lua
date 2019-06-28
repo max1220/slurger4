@@ -133,10 +133,10 @@ end
 
 
 -- get a local version of the url from a json
-local function get_local_image_from_url(url)
+local function get_local_image_from_url(url, resolution)
 	local url = turbo.escape.unescape(url)
 
-	local filename = config.img_path .. filename_from_url(url)
+	local filename = config.img_path .. resolution .. "_"..filename_from_url(url)
 	if exists_file(filename) then
 		return url_for_image(filename)
 	else
@@ -186,7 +186,7 @@ end
 
 -- get an image from a coupon and a resolution
 local function _img(coupon, resolution)
-	return get_local_image_from_url(subst_str(coupon.images.bgImage.url, {resolution=resolution}))
+	return get_local_image_from_url(subst_str(coupon.images.bgImage.url, {resolution=resolution}), resolution)
 end
 
 
@@ -234,14 +234,32 @@ local coupon_handler = class("admin_panel", turbo.web.RequestHandler)
 function coupon_handler:get(coupon_i)
 	local coupon_i = assert(tonumber(coupon_i))
 	local coupon = assert(coupons[coupon_i])
+	
+	local theme = self:get_argument("theme", "")
+	
+	local bootstrap_css = "/static/bootstrap-4.3.1/css/bootstrap.min.css"
+	if theme == "cyborg" then
+		bootstrap_css = "/static/cyborg/bootstrap.min.css"
+	elseif theme == "flatly" then
+		bootstrap_css = "/static/flatly/bootstrap.min.css"
+	elseif theme == "darkly" then
+		bootstrap_css = "/static/darkly/bootstrap.min.css"
+	end
+	
+	
+	for k,v in ipairs(coupon.categories) do
+		local category = category_by_id(v)
+		coupon.categories[k] = category
+	end
+	
 	self:write(coupon_template({
 		coupon = coupon,
-		
-		resolution = 320,
+		resolution = 750,
 		_img = _img,
 		NULL = json.null,
-		category_by_id = category_by_id
+		bootstrap_css = bootstrap_css,
 	}))
+	
 end
 
 
@@ -361,7 +379,8 @@ function coupons_handler:get()
 		tiles = tiles,
 		prestitials = prestitials,
 		bootstrap_css = bootstrap_css,
-		resolution = 320,
+		resolution = 375,
+		resolution_lg = 640,
 		NULL = json.null,
 		_img = _img
 	}))

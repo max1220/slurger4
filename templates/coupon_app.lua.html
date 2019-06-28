@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<title>{{coupon.title or ""}}</title>
+		<link href="{* bootstrap_css *}" rel="stylesheet">
+		<link href="/static/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
+		<style>
+		.box{
+			position: relative;
+			width: 100%;		/* desired width */
+		}
+		.box:before{
+			content: "";
+			display: block;
+			padding-top: 100%; 	/* initial ratio of 1:1*/
+		}
+		</style>
+	</head>
+	<body class="bg-light" style="padding-bottom: 100px;">
+		<div class="container-fluid p-0 m-0">
+			<div style="min-height: 100vh;" class="p-0 m-0">
+				
+				<div style="width: 100%; position: relative">
+					
+					<div class="collapse img-collapse show">
+						<img class="p-0 m-0" src="{* _img(coupon, resolution) *}" width="100%">
+					</div>
+				
+					<div class="collapse img-collapse">
+						<div class="bg-light box">
+							<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0;">
+								<h1 style="margin-top: 50%; text-align: center;">{{coupon.plu}}</h1>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="p-3" style="background-color: #f8e6d2; color: #542714;">
+					<h3 class="mb-0" style="font-weight: bold;">{{coupon.title or ""}}</h3>
+					{% if coupon.description and coupon.description ~= NULL then %}
+					<p>{{ coupon.description }}</p>
+					{% end %}
+					<h4 style="font-weight: bold;">{{coupon.price or ""}}</h4>
+				</div>
+			</div>
+			
+		</div>
+		
+		<div class="fixed-bottom">
+
+			<div class="collapse" id="details">
+				<div class="bg-light p-4">
+					<h5 class="h4">Details</h5>
+					{%
+					local categories_str = {}
+					if coupon.categories then
+						for _,category in ipairs(coupon.categories) do
+							table.insert(categories_str, tostring(category.title))
+						end
+					end
+					%}
+					<pre><code>
+plu:            {{ coupon.plu or ""}}
+categories:     {{ table.concat(categories_str, ", ") }}
+price:          {{ coupon.price  or ""}}
+width:          {{ coupon.dimension.width or ""}}
+height:         {{ coupon.dimension.height or ""}}
+to:             {{ os.date("%c", coupon.to or 0) }}
+from:           {{ os.date("%c", coupon.from or 0) }}
+newTo:          {{ coupon.newTo == NULL and "" or os.date("%c", coupon.newTo == NULL) }}
+modified:       {{ os.date("%c", coupon.modified or 0) }}
+added(slurger): {{ os.date("%c", coupon._slurger_time or 0) }}
+id:             {{ coupon.id }}
+myBkOnly:       {{ coupon.myBkOnly == "NULL" and "" or tostring(coupon.myBkOnly) }}
+footnote:       {{ coupon.footnote == "NULL" and "" or coupon.footnote }}
+</code></pre>
+				</div>
+			</div>
+
+			<div class="p-0 m-0">
+				<button class="btn btn-lg btn-block" style="background-color: #F7A600; color: #fff; font-weight: bold; font-size: 150%;" data-toggle="collapse" data-target=".img-collapse" aria-expanded="false" aria-label="Toggle navigation">Einlösen</button>
+			</div>
+
+			<nav class="navbar bg-light">
+				<div>
+					<a href="/" role="button" class="nav-item btn " role="button" aria-label="Dummy button(ignore)">
+						<span class="oi oi-chevron-left"></span>
+					</a>
+				</div>
+				
+				<div>
+					<button class="nav-item btn " role="button" data-toggle="collapse" data-target="#details" aria-expanded="false" aria-label="Toggle Details">
+						<span class="oi oi-ellipses"></span>
+					</button>
+				</div>
+			</nav>
+		</div>
+		
+		<script src="/static/jquery-3.4.0.min.js"></script>
+		<script src="/static/bootstrap-4.3.1/js/bootstrap.bundle.min.js"></script>
+	</body>
+</html>
+
