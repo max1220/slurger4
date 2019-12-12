@@ -1,4 +1,5 @@
 #!/usr/bin/env luajit
+-- luacheck: ignore TURBO_SSL class
 TURBO_SSL = true
 local turbo = require("turbo")
 local json = require("cjson")
@@ -19,9 +20,9 @@ end
 
 
 -- write a string to disk
-local function write_file(path, str)
+local function write_file(path, _str)
 	local file = assert(io.open(path, "wb"))
-	local str = file:write(str)
+	file:write(_str)
 	file:close()
 end
 
@@ -57,22 +58,22 @@ end
 
 -- add the new coupons from other_coupons to the coupons table
 local function merge_new_coupons(other_coupons)
-	
+
 	-- make list of coupon id's in the original coupons
 	local coupon_ids = {}
-	for i, coupon in ipairs(coupons) do
+	for _, coupon in ipairs(coupons) do
 		coupon_ids[coupon.id] = true
 	end
-	
+
 	-- check other coupons for coupons not in that list and add them
-	for i, coupon in ipairs(other_coupons) do
+	for _, coupon in ipairs(other_coupons) do
 		if not coupon_ids[coupon.id] then
 			turbo.log.success("Adding missing coupon: " .. coupon.id)
 			coupon._slurger_time = os.time()
 			table.insert(coupons, coupon)
 		end
 	end
-	
+
 	return coupons
 end
 
@@ -82,7 +83,7 @@ local function update_data()
 	local coupons_new = json.decode(download_to_string(config.burgerking_api_urls.coupons, "coupons.json"))
 	merge_new_coupons(coupons_new)
 	write_file("coupons.json", json.encode(coupons))
-	
+
 	meta = json.decode(download_to_file(config.burgerking_api_urls.meta, "meta.json"))
 	flags = json.decode(download_to_file(config.burgerking_api_urls.flags, "flags.json"))
 	contents = json.decode(download_to_file(config.burgerking_api_urls.contents, "contents.json"))
@@ -133,17 +134,18 @@ end
 
 
 -- get a local version of the url from a json
-local function get_local_image_from_url(url, resolution)
-	local url = turbo.escape.unescape(url)
+local function get_local_image_from_url(_url, resolution)
+	local url = turbo.escape.unescape(_url)
 
 	local filename = config.img_path .. resolution .. "_"..filename_from_url(url)
 	if exists_file(filename) then
 		return url_for_image(filename)
 	else
-		download_to_file("https://api.burgerking.de" .. url, filename)
-		return url_for_image(filename)
+		-- download_to_file("https://api.burgerking.de" .. url, filename)
+		--return url_for_image(filename)
+		return "https://api.burgerking.de" .. url
 	end
-	
+
 	-- return "https://api.burgerking.de" .. url
 end
 
@@ -192,7 +194,7 @@ end
 
 -- get a category by it's id
 local function category_by_id(id)
-	for i, category in ipairs(flags.productCategories) do
+	for _, category in ipairs(flags.productCategories) do
 		if category.id == id then
 			return category
 		end
@@ -231,12 +233,12 @@ end
 
 local coupon_template = template.compile(config.templates.coupon_template)
 local coupon_handler = class("admin_panel", turbo.web.RequestHandler)
-function coupon_handler:get(coupon_i)
-	local coupon_i = assert(tonumber(coupon_i))
+function coupon_handler:get(_coupon_i)
+	local coupon_i = assert(tonumber(_coupon_i))
 	local coupon = assert(coupons[coupon_i])
-	
+
 	local theme = self:get_argument("theme", "")
-	
+
 	local bootstrap_css = "/static/bootstrap-4.3.1/css/bootstrap.min.css"
 	if theme == "cyborg" then
 		bootstrap_css = "/static/cyborg/bootstrap.min.css"
@@ -245,13 +247,13 @@ function coupon_handler:get(coupon_i)
 	elseif theme == "darkly" then
 		bootstrap_css = "/static/darkly/bootstrap.min.css"
 	end
-	
-	
+
+
 	for k,v in ipairs(coupon.categories) do
 		local category = category_by_id(v)
 		coupon.categories[k] = category
 	end
-	
+
 	self:write(coupon_template({
 		coupon = coupon,
 		resolution = 750,
@@ -259,7 +261,7 @@ function coupon_handler:get(coupon_i)
 		NULL = json.null,
 		bootstrap_css = bootstrap_css,
 	}))
-	
+
 end
 
 
@@ -271,7 +273,7 @@ function coupons_handler:get()
 	local filters = self:get_argument("filters", "")
 	local theme = self:get_argument("theme", "")
 	local search = self:get_argument("search", "")
-	
+
 	local bootstrap_css = "/static/bootstrap-4.3.1/css/bootstrap.min.css"
 	if theme == "cyborg" then
 		bootstrap_css = "/static/cyborg/bootstrap.min.css"
@@ -280,93 +282,97 @@ function coupons_handler:get()
 	elseif theme == "darkly" then
 		bootstrap_css = "/static/darkly/bootstrap.min.css"
 	end
-	
-	
+
+
 	if search then
-		_coupons = ifilter(_coupons, function(k, coupon)
-			if coupon.title:lower():match(search:lower()) then
+		_coupons = ifilter(_coupons, function(_, coupon)
+			if coupon.title and (coupon.title ~= json.null) and (coupon.title:lower():match(search:lower())) then
 				return true
-			elseif coupon.description ~= json.null and coupon.description:lower():match(search) then
+			elseif coupon.description and (coupon.description ~= json.null) and coupon.description:lower():match(search) then
 				return true
 			end
 		end)
 	end
-	
-	
+
 	if filters ~= "" then
 		filters = split_csv(filters)
 		for k,v in ipairs(filters) do
 			filters[v] = k
 		end
 	end
-	
+
 	if sort == "price_asc" then
 		table.sort(_coupons, function(a,b)
-			return a.price < b.price
+			return (tonumber(a.price) or 0) < (tonumber(b.price) or 0)
 		end)
 	elseif sort == "price_desc" then
 		table.sort(_coupons, function(a,b)
-			return a.price > b.price
+			return (tonumber(a.price) or 0) > (tonumber(b.price) or 0)
 		end)
 	elseif sort == "to_asc" then
 		table.sort(_coupons, function(a,b)
-			return a.to < b.to
+			return (tonumber(a.to) or 0) < (tonumber(b.to) or 0)
 		end)
 	elseif sort == "to_desc" then
 		table.sort(_coupons, function(a,b)
-			return a.to > b.to
+			return (tonumber(a.to) or 0) > (tonumber(b.to) or 0)
 		end)
 	end
-	
+
 	if filters.hide_invalid_date then
-		_coupons = ifilter(_coupons, function(k, coupon)
-			if (os.time() <= coupon.to) and (os.time() >= coupon.from) then
+		_coupons = ifilter(_coupons, function(_, coupon)
+			if (os.time() <= (tonumber(coupon.to) or 0)) and (os.time() >= (tonumber(coupon.from) or 0)) then
 				return true
 			end
 		end)
 	end
-	
+
 	if filters.show_invalid_date then
-		_coupons = ifilter(_coupons, function(k, coupon)
-			if (os.time() <= coupon.to) and (os.time() >= coupon.from) then
+		_coupons = ifilter(_coupons, function(_, coupon)
+			if (os.time() <= (tonumber(coupon.to) or 0)) and (os.time() >= (tonumber(coupon.from) or 0)) then
 				return
 			end
 			return true
 		end)
 	end
-	
+
 	if filters.price_max then
-		_coupons = ifilter(_coupons, function(k, coupon)
+		_coupons = ifilter(_coupons, function(_, coupon)
 			local max_price = assert(tonumber(filters[filters.price_max + 1]))
-			local price = tonumber((coupon.price:gsub("€", ""):gsub(",", "."))) or 0
-			if price <= max_price then
-				return true
+			if coupon.price and coupon.price ~= json.null then
+				local price = tonumber((coupon.price:gsub("€", ""):gsub(",", "."))) or 0
+				if price <= max_price then
+					return true
+				end
 			end
+
 		end)
 	end
-	
+
 	if filters.price_min then
-		_coupons = ifilter(_coupons, function(k, coupon)
+		_coupons = ifilter(_coupons, function(_, coupon)
 			local min_price = assert(tonumber(filters[filters.price_min + 1]))
-			local price = tonumber((coupon.price:gsub("€", ""):gsub(",", "."))) or 0
-			if price >= min_price then
-				return true
+			if coupon.price and coupon.price ~= json.null then
+				local price = tonumber((coupon.price:gsub("€", ""):gsub(",", "."))) or 0
+				if price >= min_price then
+					return true
+				end
 			end
 		end)
 	end
-	
+
 	if filters.category then
-		_coupons = ifilter(_coupons, function(k, coupon)
+		_coupons = ifilter(_coupons, function(_, coupon)
 			local category_id = assert(tonumber(filters[filters.category + 1]))
-			for k,v in ipairs(coupon.categories) do
+			for _,v in ipairs(coupon.categories) do
 				if v == category_id then
 					return true
 				end
 			end
 		end)
 	end
-	
-	
+
+
 
 	self:write(coupons_template({
 		coupons = _coupons,
@@ -406,4 +412,3 @@ cinstance = turbo.ioloop.instance()
 app:listen(config.port)
 cinstance:add_callback(startup)
 cinstance:start()
-
